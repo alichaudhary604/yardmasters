@@ -6,20 +6,25 @@ import os
 # --- 1. PAGE CONFIG & THEME OVERRIDE ---
 st.set_page_config(page_title="YardMasters Ltd.", page_icon="🌳", layout="wide")
 
-# This CSS targets the very 'roots' of Streamlit to force the Green Theme
+# This CSS targets the specific containers seen in your screenshot to kill the white background
 st.markdown("""
     <style>
-    /* Force the background color on all containers */
-    :root {
-        --background-color: #f2f5f1;
-        --secondary-background-color: #e4ebe2;
-    }
-    
-    .stApp, .stAppViewContainer, .stMain, [data-testid="stHeader"] {
+    /* Targets the main background and the specific block container in your screenshot */
+    .stApp, 
+    .stAppViewContainer, 
+    .stMain, 
+    .stAppViewBlockContainer, 
+    [data-testid="stAppViewBlockContainer"],
+    [data-testid="stVerticalBlock"] {
         background-color: #f2f5f1 !important;
     }
+    
+    /* Makes the top header transparent */
+    header[data-testid="stHeader"] {
+        background-color: rgba(0,0,0,0) !important;
+    }
 
-    /* Force text to Charcoal Green */
+    /* Force all text to Charcoal Green for readability */
     h1, h2, h3, p, span, label, .stMarkdown {
         color: #2c3e2d !important;
     }
@@ -34,9 +39,10 @@ st.markdown("""
         font-weight: bold;
     }
 
-    /* Input fields and Expanders */
+    /* Styling for the Admin Login and form fields */
     .stTextInput>div>div>input, .stTextArea>div>div>textarea {
         background-color: #ffffff !important;
+        color: #2c3e2d !important;
     }
     
     .stExpander {
@@ -68,7 +74,7 @@ st.title("YardMasters Ltd.")
 st.subheader("Bespoke Landscaping & Garden Maintenance")
 st.write("---")
 
-# Portfolio Images (Using your specific filenames)
+# Portfolio Images
 col_img1, col_img2 = st.columns(2)
 with col_img1:
     st.image("planting.png", caption="Professional Garden Design", use_container_width=True)
@@ -94,7 +100,7 @@ st.write("---")
 
 # --- 5. THE QUOTE FORM ---
 st.header("Request a Free Quote")
-st.write("Submit your details and we will contact you within 24 hours.")
+st.write("Submit your details and our team will contact you within 24 hours.")
 
 form_left, form_right = st.columns(2)
 
@@ -117,21 +123,19 @@ with form_right:
     st.write("**Hours:** Monday - Saturday, 08:00 - 18:00")
     st.info("Fully insured and highly recommended professionals.")
 
-# --- 6. ADMIN PANEL (THE LOGIN) ---
+# --- 6. ADMIN PANEL ---
 st.write("<br><br>", unsafe_allow_html=True)
 st.write("---")
 with st.expander("🔐 Business Owner Login"):
-    st.write("Enter your credentials to view current leads.")
+    st.write("Enter credentials to view current leads.")
     password = st.text_input("Password", type="password")
     
-    # Use this password for your demo
     if password == "yardmasters2026":
         st.subheader("Client Inquiries")
         if os.path.isfile(DB_FILE):
             df = pd.read_csv(DB_FILE)
             st.dataframe(df, use_container_width=True)
             
-            # Export function
             csv = df.to_csv(index=False).encode('utf-8')
             st.download_button("Export Leads to CSV", data=csv, file_name="yardmasters_leads.csv")
         else:
