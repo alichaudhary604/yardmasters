@@ -108,11 +108,11 @@ with t_col2:
 st.write("---")
 
 # --- 6. INTERACTIVE QUOTE & CONTACT ---
-st.header("Get a Free Estimate")
+st.header("Get an Estimate")
 contact_left, contact_right = st.columns(2)
 
 with contact_left:
-    st.write("Ready to transform your space? Fill out the form or contact Aamir directly.")
+    st.write("Ready to transform your space? Fill out the form or contact directly.")
     st.markdown("### 📞 Contact Info")
     st.write("**Phone:** 07XXX XXXXXX *(Ask Aamir for his number)*")
     st.write("**Email:** info@yardmasters.ltd")
