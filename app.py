@@ -1,113 +1,104 @@
 import streamlit as st
-import requests
+import pandas as pd
+from datetime import datetime
+import os
 
-# --- 1. PAGE CONFIG ---
+# --- 1. PAGE CONFIG & FORCED THEME ---
 st.set_page_config(page_title="YardMasters Ltd.", page_icon="🌳", layout="wide")
 
-# --- 2. THEME & STYLING (Sage Green & Charcoal) ---
 st.markdown("""
     <style>
-    .stApp {
+    /* Forced Background Color */
+    .stApp, .stAppViewContainer, .stMain {
         background-color: #f2f5f1 !important;
     }
-    h1, h2, h3 {
+    header[data-testid="stHeader"] {
+        background-color: rgba(0,0,0,0) !important;
+    }
+    h1, h2, h3, p, span, label {
         color: #2c3e2d !important;
-        font-family: 'Helvetica Neue', sans-serif;
     }
     .stButton>button {
         background-color: #3a5a40 !important;
         color: white !important;
         border-radius: 5px !important;
-        border: none !important;
-        padding: 0.7rem 2rem !important;
     }
-    .stAlert {
-        background-color: #ffffff !important;
-        border-left: 5px solid #a3b18a !important;
-        color: #344e41 !important;
+    /* Simple styling for the data table */
+    .stDataFrame {
+        background-color: white !important;
+        border-radius: 10px;
     }
     </style>
     """, unsafe_allow_html=True)
 
-# --- 3. HERO SECTION ---
-st.title("YardMasters Ltd.")
-st.subheader("Professional Landscaping & Garden Care Specialists")
-st.write("---")
+# --- 2. DATA STORAGE LOGIC ---
+DB_FILE = "leads.csv"
 
-# --- 4. IMAGE GALLERY (Using your filenames) ---
+def save_data(name, contact, service, details):
+    new_data = pd.DataFrame([{
+        "Date": datetime.now().strftime("%Y-%m-%d %H:%M"),
+        "Name": name,
+        "Contact": contact,
+        "Service": service,
+        "Details": details,
+        "Status": "New"
+    }])
+    if not os.path.isfile(DB_FILE):
+        new_data.to_csv(DB_FILE, index=False)
+    else:
+        new_data.to_csv(DB_FILE, mode='a', header=False, index=False)
+
+# --- 3. PUBLIC WEBSITE CONTENT ---
+st.title("YardMasters Ltd.")
+st.subheader("Professional Landscaping & Garden Care")
+
 col_img1, col_img2 = st.columns(2)
 with col_img1:
-    # Make sure mowing.png is uploaded to your GitHub repo
-    st.image("mowing.png", caption="Precision Maintenance", use_container_width=True)
+    st.image("mowing.png", caption="Maintenance", use_container_width=True)
 with col_img2:
-    # Make sure planting.png is uploaded to your GitHub repo
-    st.image("planting.png", caption="Expert Planting & Design", use_container_width=True)
+    st.image("planting.png", caption="Design", use_container_width=True)
 
 st.write("---")
 
-# --- 5. SERVICES ---
-st.header("Our Professional Services")
-c1, c2, c3 = st.columns(3)
-with c1:
-    st.markdown("### 🌿 Garden Tidy-Ups")
-    st.write("Full seasonal clearances and garden rejuvenation.")
-with c2:
-    st.markdown("### 🏗️ Hard Landscaping")
-    st.write("Quality paving, decking, and fencing.")
-with c3:
-    st.markdown("### 🌳 Maintenance")
-    st.write("Expert hedge trimming and lawn care programs.")
-
-st.write("---")
-
-# --- 6. QUOTE REQUEST (The "Showroom" Form) ---
-st.header("Request a Site Survey")
-st.write("Provide your details below and our team will contact you within 24 hours.")
-
+# --- 4. QUOTE FORM ---
+st.header("Request a Free Site Survey")
 f_col1, f_col2 = st.columns(2)
 
 with f_col1:
     name = st.text_input("Name")
     contact = st.text_input("Phone Number or Email")
-    service = st.selectbox("Required Service", ["Garden Tidy-up", "Landscaping", "Tree Work", "Fencing", "Other"])
-    details = st.text_area("Project Details")
+    service = st.selectbox("Service", ["Garden Tidy-up", "Landscaping", "Tree Work", "Other"])
+    details = st.text_area("Details")
     
-    if st.button("Submit Quote Request"):
+    if st.button("Submit Request"):
         if name and contact:
-            # --- EMAILJS CONFIG ---
-            # Paste your keys here from your EmailJS account
-            service_id = "YOUR_SERVICE_ID"
-            template_id = "YOUR_TEMPLATE_ID"
-            public_key = "YOUR_PUBLIC_KEY"
-
-            data = {
-                "service_id": service_id,
-                "template_id": template_id,
-                "user_id": public_key,
-                "template_params": {
-                    "client_name": name,
-                    "client_contact": contact,
-                    "service_needed": service,
-                    "details": details
-                }
-            }
-
-            try:
-                response = requests.post("https://api.emailjs.com/api/v1.0/email/send", json=data)
-                if response.status_code == 200:
-                    st.success("Request sent! We will be in touch shortly.")
-                else:
-                    st.error("Submission failed. (Check your EmailJS Keys!)")
-            except:
-                st.error("System error. Check your connection.")
+            save_data(name, contact, service, details)
+            st.success("Thank you! Your request has been logged.")
         else:
-            st.warning("Please provide both your name and contact info.")
+            st.error("Please fill in your name and contact info.")
 
 with f_col2:
-    st.markdown("### 📞 Contact Information")
-    st.write("**Service Area:** London & Surrounding Areas")
-    st.write("**Business Hours:** Monday - Saturday, 08:00 - 18:00")
-    st.write("**Direct Line:** [Add Phone Number Here]")
-    st.info("Fully insured professionals providing competitive, transparent pricing.")
+    st.markdown("### 📞 Contact")
+    st.write("**Area:** London & Surrounding")
+    st.write("**Hours:** Mon - Sat, 08:00 - 18:00")
 
-st.markdown("<br><hr><center>© 2026 YardMasters Ltd.</center>", unsafe_allow_html=True)
+# --- 5. PRIVATE ADMIN PANEL ---
+st.write("---")
+with st.expander("🔐 Admin Login"):
+    password = st.text_input("Enter Password", type="password")
+    # You can change 'admin123' to whatever you want
+    if password == "yardmasters2026":
+        st.subheader("Current Quote Requests")
+        if os.path.isfile(DB_FILE):
+            df = pd.read_csv(DB_FILE)
+            st.dataframe(df, use_container_width=True)
+            
+            # Option to download the list as Excel/CSV
+            csv = df.to_csv(index=False).encode('utf-8')
+            st.download_button("Download Leads as CSV", data=csv, file_name="yardmasters_leads.csv")
+        else:
+            st.info("No requests received yet.")
+    elif password:
+        st.error("Incorrect password")
+
+st.markdown("<br><center>© 2026 YardMasters Ltd.</center>", unsafe_allow_html=True)
