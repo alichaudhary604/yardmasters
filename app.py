@@ -3,30 +3,46 @@ import pandas as pd
 from datetime import datetime
 import os
 
-# --- 1. PAGE CONFIG & FORCED THEME ---
+# --- 1. PAGE CONFIG & THEME OVERRIDE ---
 st.set_page_config(page_title="YardMasters Ltd.", page_icon="🌳", layout="wide")
 
+# This CSS targets the very 'roots' of Streamlit to force the Green Theme
 st.markdown("""
     <style>
-    /* Forced Background Color */
-    .stApp, .stAppViewContainer, .stMain {
+    /* Force the background color on all containers */
+    :root {
+        --background-color: #f2f5f1;
+        --secondary-background-color: #e4ebe2;
+    }
+    
+    .stApp, .stAppViewContainer, .stMain, [data-testid="stHeader"] {
         background-color: #f2f5f1 !important;
     }
-    header[data-testid="stHeader"] {
-        background-color: rgba(0,0,0,0) !important;
-    }
-    h1, h2, h3, p, span, label {
+
+    /* Force text to Charcoal Green */
+    h1, h2, h3, p, span, label, .stMarkdown {
         color: #2c3e2d !important;
     }
+
+    /* Professional Button Styling */
     .stButton>button {
         background-color: #3a5a40 !important;
         color: white !important;
-        border-radius: 5px !important;
+        border-radius: 8px !important;
+        border: none !important;
+        padding: 0.5rem 2rem !important;
+        font-weight: bold;
     }
-    /* Simple styling for the data table */
-    .stDataFrame {
-        background-color: white !important;
-        border-radius: 10px;
+
+    /* Input fields and Expanders */
+    .stTextInput>div>div>input, .stTextArea>div>div>textarea {
+        background-color: #ffffff !important;
+    }
+    
+    .stExpander {
+        background-color: #ffffff !important;
+        border: 1px solid #d1ead5 !important;
+        border-radius: 10px !important;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -41,7 +57,6 @@ def save_data(name, contact, service, details):
         "Contact": contact,
         "Service": service,
         "Details": details,
-        "Status": "New"
     }])
     if not os.path.isfile(DB_FILE):
         new_data.to_csv(DB_FILE, index=False)
@@ -50,55 +65,78 @@ def save_data(name, contact, service, details):
 
 # --- 3. PUBLIC WEBSITE CONTENT ---
 st.title("YardMasters Ltd.")
-st.subheader("Professional Landscaping & Garden Care")
+st.subheader("Bespoke Landscaping & Garden Maintenance")
+st.write("---")
 
+# Portfolio Images (Using your specific filenames)
 col_img1, col_img2 = st.columns(2)
 with col_img1:
-    st.image("mowing.png", caption="Maintenance", use_container_width=True)
+    st.image("planting.png", caption="Professional Garden Design", use_container_width=True)
 with col_img2:
-    st.image("planting.png", caption="Design", use_container_width=True)
+    st.image("mowing.png", caption="Expert Maintenance & Care", use_container_width=True)
 
 st.write("---")
 
-# --- 4. QUOTE FORM ---
-st.header("Request a Free Site Survey")
-f_col1, f_col2 = st.columns(2)
+# --- 4. SERVICES SECTION ---
+st.header("Our Services")
+c1, c2, c3 = st.columns(3)
+with c1:
+    st.markdown("### 🌿 Maintenance")
+    st.write("Hedge trimming, lawn care, and seasonal clearances.")
+with c2:
+    st.markdown("### 🏗️ Landscaping")
+    st.write("Fencing, decking, and paving solutions.")
+with c3:
+    st.markdown("### 🍂 Cleanups")
+    st.write("Full garden rejuvenation and waste removal.")
 
-with f_col1:
-    name = st.text_input("Name")
-    contact = st.text_input("Phone Number or Email")
-    service = st.selectbox("Service", ["Garden Tidy-up", "Landscaping", "Tree Work", "Other"])
-    details = st.text_area("Details")
+st.write("---")
+
+# --- 5. THE QUOTE FORM ---
+st.header("Request a Free Quote")
+st.write("Submit your details and we will contact you within 24 hours.")
+
+form_left, form_right = st.columns(2)
+
+with form_left:
+    name = st.text_input("Full Name")
+    contact = st.text_input("Phone Number / Email")
+    service = st.selectbox("Service Required", ["Maintenance", "Landscaping", "Clearance", "Other"])
+    details = st.text_area("Tell us about your project...")
     
     if st.button("Submit Request"):
         if name and contact:
             save_data(name, contact, service, details)
-            st.success("Thank you! Your request has been logged.")
+            st.success("Success! Your request has been recorded.")
         else:
-            st.error("Please fill in your name and contact info.")
+            st.error("Please provide both your name and contact info.")
 
-with f_col2:
-    st.markdown("### 📞 Contact")
-    st.write("**Area:** London & Surrounding")
-    st.write("**Hours:** Mon - Sat, 08:00 - 18:00")
+with form_right:
+    st.markdown("### 📞 Contact Details")
+    st.write("**Area:** London & Surrounding Areas")
+    st.write("**Hours:** Monday - Saturday, 08:00 - 18:00")
+    st.info("Fully insured and highly recommended professionals.")
 
-# --- 5. PRIVATE ADMIN PANEL ---
+# --- 6. ADMIN PANEL (THE LOGIN) ---
+st.write("<br><br>", unsafe_allow_html=True)
 st.write("---")
-with st.expander("🔐 Admin Login"):
-    password = st.text_input("Enter Password", type="password")
-    # You can change 'admin123' to whatever you want
+with st.expander("🔐 Business Owner Login"):
+    st.write("Enter your credentials to view current leads.")
+    password = st.text_input("Password", type="password")
+    
+    # Use this password for your demo
     if password == "yardmasters2026":
-        st.subheader("Current Quote Requests")
+        st.subheader("Client Inquiries")
         if os.path.isfile(DB_FILE):
             df = pd.read_csv(DB_FILE)
             st.dataframe(df, use_container_width=True)
             
-            # Option to download the list as Excel/CSV
+            # Export function
             csv = df.to_csv(index=False).encode('utf-8')
-            st.download_button("Download Leads as CSV", data=csv, file_name="yardmasters_leads.csv")
+            st.download_button("Export Leads to CSV", data=csv, file_name="yardmasters_leads.csv")
         else:
-            st.info("No requests received yet.")
+            st.info("No leads recorded yet.")
     elif password:
-        st.error("Incorrect password")
+        st.error("Incorrect Password.")
 
 st.markdown("<br><center>© 2026 YardMasters Ltd.</center>", unsafe_allow_html=True)
