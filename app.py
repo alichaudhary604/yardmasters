@@ -3,33 +3,23 @@ import pandas as pd
 from datetime import datetime
 import os
 
-# --- 1. PAGE CONFIG & THEME OVERRIDE ---
+# --- 1. PAGE CONFIG ---
 st.set_page_config(page_title="YardMasters Ltd.", page_icon="🌳", layout="wide")
 
-# This CSS targets the specific containers seen in your screenshot to kill the white background
+# Optimized CSS to work WITH the config.toml file
 st.markdown("""
     <style>
-    /* Targets the main background and the specific block container in your screenshot */
-    .stApp, 
-    .stAppViewContainer, 
-    .stMain, 
-    .stAppViewBlockContainer, 
-    [data-testid="stAppViewBlockContainer"],
-    [data-testid="stVerticalBlock"] {
+    /* Force background consistency */
+    .stApp, .stMain, [data-testid="stAppViewBlockContainer"] {
         background-color: #f2f5f1 !important;
     }
     
-    /* Makes the top header transparent */
-    header[data-testid="stHeader"] {
-        background-color: rgba(0,0,0,0) !important;
-    }
-
-    /* Force all text to Charcoal Green for readability */
-    h1, h2, h3, p, span, label, .stMarkdown {
+    /* Headings and Text */
+    h1, h2, h3, p, span, label {
         color: #2c3e2d !important;
     }
 
-    /* Professional Button Styling */
+    /* Buttons */
     .stButton>button {
         background-color: #3a5a40 !important;
         color: white !important;
@@ -39,7 +29,7 @@ st.markdown("""
         font-weight: bold;
     }
 
-    /* Styling for the Admin Login and form fields */
+    /* Form Fields & Expander */
     .stTextInput>div>div>input, .stTextArea>div>div>textarea {
         background-color: #ffffff !important;
         color: #2c3e2d !important;
