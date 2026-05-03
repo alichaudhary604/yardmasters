@@ -1,135 +1,113 @@
 import streamlit as st
+import requests
 
-# --- 1. PAGE CONFIGURATION ---
-st.set_page_config(
-    page_title="YardMasters Ltd. | London Landscaping",
-    page_icon="🌿",
-    layout="wide"
-)
+# --- 1. PAGE CONFIG ---
+st.set_page_config(page_title="YardMasters Ltd.", page_icon="🌳", layout="wide")
 
-# --- 2. CUSTOM GREEN THEME (CSS) ---
+# --- 2. THEME & STYLING (Sage Green & Charcoal) ---
 st.markdown("""
     <style>
-    /* Main background and text */
     .stApp {
-        background-color: #fcfdfc;
+        background-color: #f2f5f1 !important;
     }
     h1, h2, h3 {
-        color: #1b3022 !important;
-        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        color: #2c3e2d !important;
+        font-family: 'Helvetica Neue', sans-serif;
     }
-    
-    /* Customizing the Button */
     .stButton>button {
-        background-color: #2e4a31 !important;
+        background-color: #3a5a40 !important;
         color: white !important;
-        border-radius: 8px !important;
+        border-radius: 5px !important;
         border: none !important;
-        padding: 0.6rem 2rem !important;
-        font-weight: bold;
-        transition: 0.3s;
+        padding: 0.7rem 2rem !important;
     }
-    .stButton>button:hover {
-        background-color: #3e6342 !important;
-        border: none !important;
-    }
-
-    /* Testimonial Boxes */
     .stAlert {
-        background-color: #e8f5e9 !important;
-        border: 1px solid #c8e6c9 !important;
-        color: #1b5e20 !important;
-        border-radius: 10px;
+        background-color: #ffffff !important;
+        border-left: 5px solid #a3b18a !important;
+        color: #344e41 !important;
     }
-    
-    /* Sidebar/Menu styling */
-    header {visibility: hidden;}
     </style>
     """, unsafe_allow_html=True)
 
-# --- 3. HEADER & HERO SECTION ---
-col_title, col_cta = st.columns([2, 1])
+# --- 3. HERO SECTION ---
+st.title("YardMasters Ltd.")
+st.subheader("Professional Landscaping & Garden Care Specialists")
+st.write("---")
 
-with col_title:
-    st.title("YardMasters Ltd.")
-    st.subheader("Bespoke Landscaping & Expert Garden Care")
-    st.write("📍 **Serving London & Surrounding Areas**")
-
-with col_cta:
-    st.write(" ") # Spacing
-    st.link_button("View Our 5-Star Reviews", "https://maps.app.goo.gl/FxYksuPrLMZ24pr67")
-
-# Large Hero Image
-st.image("https://images.unsplash.com/photo-1558904541-efa8c1965f1e?q=80&w=1200", use_container_width=True)
+# --- 4. IMAGE GALLERY (Using your filenames) ---
+col_img1, col_img2 = st.columns(2)
+with col_img1:
+    # Make sure mowing.png is uploaded to your GitHub repo
+    st.image("mowing.png", caption="Precision Maintenance", use_container_width=True)
+with col_img2:
+    # Make sure planting.png is uploaded to your GitHub repo
+    st.image("planting.png", caption="Expert Planting & Design", use_container_width=True)
 
 st.write("---")
 
-# --- 4. SERVICES SECTION ---
-st.header("Professional Services")
-col1, col2, col3 = st.columns(3)
-
-with col1:
-    st.markdown("### 🌿 Gardening")
-    st.write("From seasonal tidy-ups to precision hedge trimming and planting.")
-
-with col2:
-    st.markdown("### 🏗️ Landscaping")
-    st.write("High-quality patios, decking, fencing, and complete garden redesigns.")
-
-with col3:
-    st.markdown("### 🏠 Indoor Help")
-    st.write("Aamir and the team also assist with indoor assembly and handiwork.")
+# --- 5. SERVICES ---
+st.header("Our Professional Services")
+c1, c2, c3 = st.columns(3)
+with c1:
+    st.markdown("### 🌿 Garden Tidy-Ups")
+    st.write("Full seasonal clearances and garden rejuvenation.")
+with c2:
+    st.markdown("### 🏗️ Hard Landscaping")
+    st.write("Quality paving, decking, and fencing.")
+with c3:
+    st.markdown("### 🌳 Maintenance")
+    st.write("Expert hedge trimming and lawn care programs.")
 
 st.write("---")
 
-# --- 5. TESTIMONIALS (From Google Maps) ---
-st.header("What Our Clients Say")
-t_col1, t_col2 = st.columns(2)
+# --- 6. QUOTE REQUEST (The "Showroom" Form) ---
+st.header("Request a Free Site Survey")
+st.write("Provide your details below and our team will contact you within 24 hours.")
 
-with t_col1:
-    st.info("""
-    **"Aamir did a great job... very hard-working, effective, and efficient. 
-    Got everything done to a good standard. Highly recommend."**
-    """)
-    st.info("""
-    **"Excellent work by Aamir and his team. Professional and efficient."**
-    """)
+f_col1, f_col2 = st.columns(2)
 
-with t_col2:
-    st.info("""
-    **"The quote was very competitive... the team arrived on time and did a 
-    great job clearing all debris. Excellent service."**
-    """)
-    st.info("""
-    **"Great knowledge. Used YardMasters for removal and landscaping jobs. 
-    Always professional."**
-    """)
-
-st.write("---")
-
-# --- 6. INTERACTIVE QUOTE & CONTACT ---
-st.header("Get an Estimate")
-contact_left, contact_right = st.columns(2)
-
-with contact_left:
-    st.write("Ready to transform your space? Fill out the form or contact directly.")
-    st.markdown("### 📞 Contact Info")
-    st.write("**Phone:** 07XXX XXXXXX *(Ask Aamir for his number)*")
-    st.write("**Email:** info@yardmasters.ltd")
-    st.write("**Hours:** Mon-Sat, 8:00 AM - 6:00 PM")
-
-with contact_right:
+with f_col1:
     name = st.text_input("Name")
-    service_type = st.selectbox("Service Needed", ["Garden Tidy-up", "Landscaping", "Tree Trimming", "Handyman/Assembly"])
-    details = st.text_area("Tell us about the project...")
+    contact = st.text_input("Phone Number or Email")
+    service = st.selectbox("Required Service", ["Garden Tidy-up", "Landscaping", "Tree Work", "Fencing", "Other"])
+    details = st.text_area("Project Details")
     
-    if st.button("Send Request to Aamir"):
-        if name:
-            st.success(f"Thank you, {name}! Your request for a {service_type} has been prepared. (Demo Only)")
-        else:
-            st.error("Please enter your name.")
+    if st.button("Submit Quote Request"):
+        if name and contact:
+            # --- EMAILJS CONFIG ---
+            # Paste your keys here from your EmailJS account
+            service_id = "YOUR_SERVICE_ID"
+            template_id = "YOUR_TEMPLATE_ID"
+            public_key = "YOUR_PUBLIC_KEY"
 
-# --- 7. FOOTER ---
-st.markdown("<br><br>", unsafe_allow_html=True)
-st.divider()
-st.caption("© 2026 YardMasters Ltd. | Built with ❤️ for Aamir")
+            data = {
+                "service_id": service_id,
+                "template_id": template_id,
+                "user_id": public_key,
+                "template_params": {
+                    "client_name": name,
+                    "client_contact": contact,
+                    "service_needed": service,
+                    "details": details
+                }
+            }
+
+            try:
+                response = requests.post("https://api.emailjs.com/api/v1.0/email/send", json=data)
+                if response.status_code == 200:
+                    st.success("Request sent! We will be in touch shortly.")
+                else:
+                    st.error("Submission failed. (Check your EmailJS Keys!)")
+            except:
+                st.error("System error. Check your connection.")
+        else:
+            st.warning("Please provide both your name and contact info.")
+
+with f_col2:
+    st.markdown("### 📞 Contact Information")
+    st.write("**Service Area:** London & Surrounding Areas")
+    st.write("**Business Hours:** Monday - Saturday, 08:00 - 18:00")
+    st.write("**Direct Line:** [Add Phone Number Here]")
+    st.info("Fully insured professionals providing competitive, transparent pricing.")
+
+st.markdown("<br><hr><center>© 2026 YardMasters Ltd.</center>", unsafe_allow_html=True)
