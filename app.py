@@ -61,7 +61,7 @@ with c3:
 st.write("---")
 
 # --- 6. QUOTE REQUEST (The "Showroom" Form) ---
-st.header("Request a Free Site Survey")
+st.header("Request a Site Survey")
 st.write("Provide your details below and our team will contact you within 24 hours.")
 
 f_col1, f_col2 = st.columns(2)
