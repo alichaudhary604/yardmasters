@@ -1,103 +1,135 @@
 import streamlit as st
 
-# --- PAGE CONFIG ---
-st.set_page_config(page_title="YardMasters Ltd. | Premium Landscaping", page_icon="🌿", layout="wide")
+# --- 1. PAGE CONFIGURATION ---
+st.set_page_config(
+    page_title="YardMasters Ltd. | London Landscaping",
+    page_icon="🌿",
+    layout="wide"
+)
 
-# --- CUSTOM GREEN THEME CSS ---
+# --- 2. CUSTOM GREEN THEME (CSS) ---
 st.markdown("""
     <style>
-    /* Main background */
+    /* Main background and text */
     .stApp {
         background-color: #fcfdfc;
     }
-    /* Headers */
     h1, h2, h3 {
         color: #1b3022 !important;
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     }
-    /* Buttons */
+    
+    /* Customizing the Button */
     .stButton>button {
         background-color: #2e4a31 !important;
         color: white !important;
         border-radius: 8px !important;
         border: none !important;
-        padding: 0.5rem 2rem !important;
+        padding: 0.6rem 2rem !important;
         font-weight: bold;
+        transition: 0.3s;
     }
-    /* Sidebar / Info boxes */
+    .stButton>button:hover {
+        background-color: #3e6342 !important;
+        border: none !important;
+    }
+
+    /* Testimonial Boxes */
     .stAlert {
         background-color: #e8f5e9 !important;
         border: 1px solid #c8e6c9 !important;
         color: #1b5e20 !important;
+        border-radius: 10px;
     }
+    
+    /* Sidebar/Menu styling */
+    header {visibility: hidden;}
     </style>
-    """, unsafe_base64=True)
+    """, unsafe_allow_html=True)
 
-# --- HEADER SECTION ---
-col_logo, col_title = st.columns([1, 4])
+# --- 3. HEADER & HERO SECTION ---
+col_title, col_cta = st.columns([2, 1])
+
 with col_title:
     st.title("YardMasters Ltd.")
-    st.subheader("Bespoke Landscaping & Garden Maintenance")
+    st.subheader("Bespoke Landscaping & Expert Garden Care")
+    st.write("📍 **Serving London & Surrounding Areas**")
 
-# --- HERO IMAGE ---
+with col_cta:
+    st.write(" ") # Spacing
+    st.link_button("View Our 5-Star Reviews", "https://maps.app.goo.gl/FxYksuPrLMZ24pr67")
+
+# Large Hero Image
 st.image("https://images.unsplash.com/photo-1558904541-efa8c1965f1e?q=80&w=1200", use_container_width=True)
 
 st.write("---")
 
-# --- ABOUT & SERVICES ---
-col1, col2 = st.columns(2)
+# --- 4. SERVICES SECTION ---
+st.header("Professional Services")
+col1, col2, col3 = st.columns(3)
 
 with col1:
-    st.header("Why Choose YardMasters?")
-    st.write("""
-    Based in London, **YardMasters Ltd.** is led by Aamir and a team of dedicated professionals. 
-    We pride ourselves on being:
-    - **Reliable:** We arrive on time, every time.
-    - **Efficient:** Quick turnarounds without sacrificing quality.
-    - **Versatile:** From heavy landscaping to indoor 'bits and bobs'.
-    """)
+    st.markdown("### 🌿 Gardening")
+    st.write("From seasonal tidy-ups to precision hedge trimming and planting.")
 
 with col2:
-    st.header("Our Services")
-    tab1, tab2, tab3 = st.tabs(["Gardening", "Landscaping", "Maintenance"])
-    with tab1:
-        st.write("Full garden tidy-ups, weeding, and planting.")
-    with tab2:
-        st.write("Patios, decking, fencing, and turfing.")
-    with tab3:
-        st.write("Regular lawn care and seasonal clearances.")
+    st.markdown("### 🏗️ Landscaping")
+    st.write("High-quality patios, decking, fencing, and complete garden redesigns.")
+
+with col3:
+    st.markdown("### 🏠 Indoor Help")
+    st.write("Aamir and the team also assist with indoor assembly and handiwork.")
 
 st.write("---")
 
-# --- TESTIMONIALS ---
+# --- 5. TESTIMONIALS (From Google Maps) ---
 st.header("What Our Clients Say")
 t_col1, t_col2 = st.columns(2)
 
 with t_col1:
-    st.info("**'Aamir did a great job... very hard-working and efficient. Got everything done to a good standard.'**")
+    st.info("""
+    **"Aamir did a great job... very hard-working, effective, and efficient. 
+    Got everything done to a good standard. Highly recommend."**
+    """)
+    st.info("""
+    **"Excellent work by Aamir and his team. Professional and efficient."**
+    """)
+
 with t_col2:
-    st.info("**'The quote was very competitive... the team did a great job clearing all debris.'**")
+    st.info("""
+    **"The quote was very competitive... the team arrived on time and did a 
+    great job clearing all debris. Excellent service."**
+    """)
+    st.info("""
+    **"Great knowledge. Used YardMasters for removal and landscaping jobs. 
+    Always professional."**
+    """)
 
 st.write("---")
 
-# --- CONTACT & FOOTER ---
-st.header("Get Your Free Quote")
-contact_col1, contact_col2 = st.columns(2)
+# --- 6. INTERACTIVE QUOTE & CONTACT ---
+st.header("Get a Free Estimate")
+contact_left, contact_right = st.columns(2)
 
-with contact_col1:
-    st.markdown("### 📞 Contact Details")
-    st.write("**Phone:** [Click to call Aamir]") # Replace with real phone
-    st.write("**Area:** Serving London & Surrounding Areas")
-    st.write("**Rating:** ⭐⭐⭐⭐⭐ (5.0 on Google Maps)")
+with contact_left:
+    st.write("Ready to transform your space? Fill out the form or contact Aamir directly.")
+    st.markdown("### 📞 Contact Info")
+    st.write("**Phone:** 07XXX XXXXXX *(Ask Aamir for his number)*")
+    st.write("**Email:** info@yardmasters.ltd")
+    st.write("**Hours:** Mon-Sat, 8:00 AM - 6:00 PM")
+
+with contact_right:
+    name = st.text_input("Name")
+    service_type = st.selectbox("Service Needed", ["Garden Tidy-up", "Landscaping", "Tree Trimming", "Handyman/Assembly"])
+    details = st.text_area("Tell us about the project...")
     
-    # Button to link to their actual Google Maps listing
-    st.link_button("View Our Reviews on Google", "https://maps.app.goo.gl/FxYksuPrLMZ24pr67")
+    if st.button("Send Request to Aamir"):
+        if name:
+            st.success(f"Thank you, {name}! Your request for a {service_type} has been prepared. (Demo Only)")
+        else:
+            st.error("Please enter your name.")
 
-with contact_col2:
-    st.markdown("### ✉️ Send a Message")
-    name = st.text_input("Your Name")
-    msg = st.text_area("How can we help?")
-    if st.button("Send Request"):
-        st.success(f"Thanks {name}! Aamir will be in touch shortly.")
-
-st.markdown("<br><hr><center>© 2026 YardMasters Ltd. | Built by YourAgency</center>", unsafe_base64=True)
+# --- 7. FOOTER ---
+st.markdown("<br><br>", unsafe_allow_html=True)
+st.divider()
+st.caption("© 2026 YardMasters Ltd. | Built with ❤️ for Aamir")
