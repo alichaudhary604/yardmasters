@@ -99,7 +99,7 @@ with c3:
 st.write("---")
 
 # --- 5. THE QUOTE FORM ---
-st.header("Request a Free Quote")
+st.header("Request a Quote")
 st.write("Submit your details and our team will contact you within 24 hours.")
 
 form_left, form_right = st.columns(2)
@@ -119,6 +119,7 @@ with form_left:
 
 with form_right:
     st.markdown("### 📞 Contact Details")
+    st.write("**07415792101**")
     st.write("**Area:** London & Surrounding Areas")
     st.write("**Hours:** Monday - Saturday, 08:00 - 18:00")
     st.info("Fully insured and highly recommended professionals.")
